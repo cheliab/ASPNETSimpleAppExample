@@ -29,7 +29,9 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseMiddleware<TokenMiddleware>();
+            // app.UseMiddleware<TokenMiddleware>(); // Обычный способ
+            app.UseToken("123"); // метод расширения IApplicationBuilder
+            
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync("Hello world!");
@@ -43,7 +45,9 @@ namespace WebApplication
         /// <param name="env"></param>
         private void ClassMiddlewareExample(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseMiddleware<TokenMiddleware>();
+            // app.UseMiddleware<TokenMiddleware>(); // Обычный способ
+            app.UseToken("123"); // метод расширения IApplicationBuilder
+            
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync("Hello world!");
