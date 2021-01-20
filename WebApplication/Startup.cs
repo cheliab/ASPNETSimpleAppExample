@@ -29,13 +29,19 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // app.UseMiddleware<TokenMiddleware>(); // Обычный способ
-            app.UseToken("123"); // метод расширения IApplicationBuilder
-            
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello world!");
-            });
+            app.UseMiddleware<AuthenticationMiddleware>();
+            app.UseMiddleware<RoutingMiddleware>();
+        }
+
+        /// <summary>
+        /// Пример с несколькими middleware классами для "авторизации" и обработки маршрутов в запросе
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
+        private void AuthenticationAndRoutingExample(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.UseMiddleware<AuthenticationMiddleware>();
+            app.UseMiddleware<RoutingMiddleware>();
         }
 
         /// <summary>
@@ -55,7 +61,7 @@ namespace WebApplication
         }
 
         /// <summary>
-        /// Использование Map для обработки запроса с определенным путем
+        /// Использование Map для обработки определенного пути запроса
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
