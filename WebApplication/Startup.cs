@@ -24,17 +24,43 @@ namespace WebApplication
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<TimeService>();
+            services.AddScoped<IMessageSender, EmailSender>();
+            services.AddSingleton<MessageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseMiddleware<TimerMiddleware>();
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            app.UseDeveloperExceptionPage();
+            app.UseMiddleware<MessageMiddleware>();
+        }
+
+        /// <summary>
+        /// Пример не совместимости жизенных циклов объектов добавляемых в виде сервисов
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
+        public void ProblemWithServicesLifeTimeExample(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            // ConfigureServices
+            
+            // 1 - Пример
+            // services.AddTransient<IMessageSender, EmailSender>();
+            // services.AddScoped<MessageService>();
+            
+            // 2 - Пример
+            // services.AddScoped<IMessageSender, EmailSender>();
+            // services.AddTransient<MessageService>();
+            
+            // 3 - Пример
+            // services.AddScoped<IMessageSender, EmailSender>();
+            // services.AddSingleton<MessageService>();
+            
+            // ------------------------------------------------
+            
+            // Configure
+            app.UseDeveloperExceptionPage();
+            app.UseMiddleware<MessageMiddleware>();
         }
 
         /// <summary>
