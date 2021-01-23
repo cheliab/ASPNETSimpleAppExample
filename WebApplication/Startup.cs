@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApplication.Services;
 
 namespace WebApplication
 {
@@ -23,14 +24,34 @@ namespace WebApplication
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddMvc();
+            services.AddTransient<TimeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseMiddleware<AuthenticationMiddleware>();
-            app.UseMiddleware<RoutingMiddleware>();
+            app.UseMiddleware<TimerMiddleware>();
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync("Hello World!");
+            });
+        }
+
+        /// <summary>
+        /// Пример с таймером
+        /// Объясняется разница использования сервисов в конструкторе и методе InvokeAsync
+        /// </summary>
+        public void TimerExample(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            // В ConfigureServices добавить
+            // services.AddTransient<TimeService>();
+            
+            // ---
+            app.UseMiddleware<TimerMiddleware>();
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync("Hello World!");
+            });
         }
 
         /// <summary>
