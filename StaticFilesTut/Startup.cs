@@ -14,6 +14,21 @@ namespace StaticFilesTut
     {
         public void Configure(IApplicationBuilder app)
         {
+            DefaultFilesOptions options = new DefaultFilesOptions();
+            options.DefaultFileNames.Clear();
+            options.DefaultFileNames.Add("hello.html"); // Устанавливаем новое имя дефолтного файла
+            app.UseDefaultFiles(options);
+
+            app.UseStaticFiles();
+
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync("Hello world");
+            });
+        }
+
+        public void DefaultStaticFilesExample(IApplicationBuilder app)
+        {
             app.UseDefaultFiles();
             app.UseStaticFiles(); // поддержка статических файлов
 
